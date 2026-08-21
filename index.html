@@ -224,6 +224,10 @@
                 if (!response.ok) throw new Error('Gagal mengambil data');
                 
                 questions = await response.json();
+                const memoriTersimpan = localStorage.getItem('jawaban_cbt_tka');
+                if (memoriTersimpan) {
+                    answers = JSON.parse(memoriTersimpan);
+                }
                 
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('quiz-screen').style.display = 'flex';
@@ -256,6 +260,7 @@
             questions.forEach((q, i) => {
                 const btn = document.createElement('div');
                 btn.className = 'grid-btn';
+                if (answers[q.id]) btn.classList.add('answered');
                 btn.innerText = q.id;
                 btn.id = 'grid-' + i;
                 btn.onclick = () => showQuestion(i);
@@ -300,6 +305,7 @@
 
         function saveAnswer(id, key) {
             answers[id] = key;
+            localStorage.setItem('jawaban_cbt_tka', JSON.stringify(answers));
             document.getElementById('grid-'+currentIndex).classList.add('answered');
             showQuestion(currentIndex); 
         }
