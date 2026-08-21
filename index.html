@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBT DUA DIMENSI 2026</title>
-    <!-- Ganti URL href di bawah ini dengan link logo/favicon Anda -->
-    <link rel="icon" href="https://ucarecdn.com/e9a7657b-e51e-4c43-a0bb-ee085ad4ca22/favicon.ico" type="image/png">
+    <title>CBT Dua Dimensi</title>
+    <link rel="icon" href="https://via.placeholder.com/32" type="image/png">
     
     <style>
         :root { --primary: #0e58a6; --primary-hover: #0b4685; --bg-color: #f4f7f6; --border: #e0e0e0; }
@@ -35,7 +34,8 @@
         /* Form Biodata */
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-        .form-group input { width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; }
+        .form-group input, .form-group select { width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; background-color: white; }
+        .input-readonly { background-color: #e9ecef !important; color: #666; cursor: not-allowed; }
         
         /* Quiz Area */
         #quiz-screen { flex-direction: column; }
@@ -52,6 +52,14 @@
         .option-label.selected { background: #e6f0f9; border-color: var(--primary); font-weight: 500; }
         .option-label input { margin-right: 1rem; margin-top: 0.3rem; accent-color: var(--primary); cursor: pointer; }
         
+        /* Mode Ukuran Font */
+        .font-small #q-text { font-size: 0.95rem; }
+        .font-small .option-label { font-size: 0.9rem; }
+        .font-normal #q-text { font-size: 1.1rem; }
+        .font-normal .option-label { font-size: 1rem; }
+        .font-large #q-text { font-size: 1.3rem; }
+        .font-large .option-label { font-size: 1.15rem; }
+        
         /* Grid Nomor */
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
         .grid-btn { padding: 0.5rem; text-align: center; border: 1px solid var(--border); background: white; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
@@ -61,29 +69,13 @@
         
         #loading { display: none; text-align: center; padding: 3rem; font-weight: bold; color: var(--primary); font-size: 1.2rem; }
         .score-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid var(--border); text-align: left;}
-    
-    /* Mode Ukuran Font */
-        .font-small #q-text { font-size: 0.95rem; }
-        .font-small .option-label { font-size: 0.9rem; }
-        
-        .font-normal #q-text { font-size: 1.1rem; }
-        .font-normal .option-label { font-size: 1rem; }
-        
-        .font-large #q-text { font-size: 1.3rem; }
-        .font-large .option-label { font-size: 1.15rem; }
-
     </style>
 </head>
 <body>
     <header>
-        <div style="font-size: 1.2rem; font-weight: bold; text-align: center;">Tryout Dua Dimensi</div>
+        <div style="font-size: 1.2rem; font-weight: bold;">CBT TKA SMP</div>
         <div class="header-controls">
-            <!-- Dropdown Mode Font -->
-            <select onchange="ubahUkuranFont(this.value)" style="padding: 0.3rem; border-radius: 4px; background: rgba(255,255,255,0.2); color: white; border: 1px solid white; font-size: 0.9rem; cursor: pointer; outline: none;">
-                <option value="font-small" style="color: black;">Kecil</option>
-                <option value="font-normal" selected style="color: black;">Sedang</option>
-                <option value="font-large" style="color: black;">Besar</option>
-            </select>
+            
             
             <div id="timer" class="timer">60:00</div>
             <button id="btn-toggle-nav" class="btn-menu" onclick="toggleSidebar()">☰</button>
@@ -95,32 +87,32 @@
         <div class="card" style="width: 100%;">
             <h2 style="margin-bottom: 1.5rem; color: var(--primary); text-align: center;">Data Peserta Ujian</h2>
             <form id="biodata-form">
-                <div class="form-group"><label>Nama Lengkap</label><input type="text" id="nama" required></div>
-                <div class="form-group"><label>Asal Sekolah</label><input type="text" id="sekolah" required></div>
+                
                 <div class="form-group">
-                    <label>Kelas</label>
-                    <select id="kelas" required style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; background-color: white; cursor: pointer;">
-                        <option value="" disabled selected>Pilih Kelas...</option>
-                        <option value="Kelas 7">Kelas 7</option>
-                        <option value="Kelas 8">Kelas 8</option>
-                        <option value="Kelas 9">Kelas 9</option>
-                    </select>
+                    <label>Nama Lengkap (Cari & Pilih Nama Anda)</label>
+                    <input list="list-nama" id="nama" oninput="autofillSiswa()" placeholder="Ketik nama Anda di sini..." required autocomplete="off">
+                    <datalist id="list-nama"></datalist>
                 </div>
-                <div class="form-group"><label>Nomor WhatsApp</label><input type="number" id="wa" required></div>
+                
+                <!-- Kolom Readonly (Terisi Otomatis) -->
+                <div class="form-group"><label>Asal Sekolah</label><input type="text" id="sekolah" class="input-readonly" readonly required></div>
+                <div class="form-group"><label>Kelas</label><input type="text" id="kelas" class="input-readonly" readonly required></div>
+                <div class="form-group"><label>Nomor WhatsApp</label><input type="text" id="wa" class="input-readonly" readonly required></div>
+                
                 <button type="submit" style="width: 100%; margin-top: 1rem;">Mulai Mengerjakan</button>
             </form>
         </div>
     </div>
 
-    <div id="loading">Memuat soal dari server... Mohon tunggu...</div>
+    <div id="loading">Memuat sistem... Mohon tunggu...</div>
 
     <!-- Quiz Screen -->
-    <div id="quiz-screen" class="container">
+    <div id="quiz-screen" class="container font-normal">
         <div class="main-content">
             <div class="card">
                 <div style="color: var(--primary); font-weight:bold; margin-bottom:0.5rem; text-transform: uppercase; letter-spacing: 1px;" id="q-category"></div>
                 <h2 style="margin-bottom: 1rem;">Soal No. <span id="q-number">1</span></h2>
-                <div id="q-text" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;"></div>
+                <div id="q-text" style="line-height: 1.6; margin-bottom: 1.5rem;"></div>
                 <div id="options-container"></div>
             </div>
             <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
@@ -138,14 +130,11 @@
     </div>
 
     <!-- Result Screen -->
-    <!-- Result Screen -->
-    <!-- Result Screen -->
     <div id="result-screen" class="container" style="max-width: 500px; text-align: center; display: none;">
         <div class="card" style="width: 100%;">
             <h2>Ujian Selesai!</h2>
             <p style="color: #666; margin-top: 0.5rem;">Berikut adalah perolehan nilai Anda:</p>
             
-            <!-- Area Skor Utama -->
             <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0; padding-bottom: 1.5rem; border-bottom: 1px dashed var(--border);">
                 <div>
                     <p style="font-size: 0.9rem; color: #666; font-weight: bold;">TOTAL SKOR</p>
@@ -157,14 +146,12 @@
                 </div>
             </div>
             
-            <!-- Rincian Nilai Mapel -->
             <div style="margin-bottom: 2rem;">
                 <div class="score-row"><span>Bahasa Indonesia</span><strong id="res-bi">0</strong></div>
                 <div class="score-row"><span>Matematika</span><strong id="res-mtk">0</strong></div>
                 <div class="score-row"><span>Bahasa Inggris</span><strong id="res-bing">0</strong></div>
                 <div class="score-row"><span>IPA</span><strong id="res-ipa">0</strong></div>
             </div>
-            
             <button onclick="location.reload()" style="width: 100%;">Kembali ke Awal</button>
         </div>
     </div>
@@ -174,41 +161,91 @@
     </footer>
 
     <script>
-        // GANTI BAGIAN INI DENGAN LINK WEB APP DARI GOOGLE APPS SCRIPT ANDA
+        // MASUKKAN URL GAS ANDA DI BAWAH INI
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOZHsWzyZUm85NsjEzJHeks1fB7QtyhvzMXifHu3ucwpUq5Q49f_WuGY9TNKq9fxyQ/exec'; 
         
         let questions = [];
-        let isExamActive = false; // Penanda apakah ujian sedang berlangsung
+        let dataPesertaServer = []; // Variabel baru untuk menampung data dari IMPORTRANGE
         let answers = {};
         let biodata = {};
         let currentIndex = 0;
-        let timeRem = 3600; // 60 menit 
+        let timeRem = 3600; // 60 menit
         let timerInt;
+        let isExamActive = false; 
 
-        // Fungsi Hide/Unhide Sidebar
+        // Mengambil Data saat halaman pertama kali dimuat
+        document.addEventListener("DOMContentLoaded", async () => {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) throw new Error('Gagal mengambil data');
+                
+                // Menerima data gabungan (Soal & Siswa) dari GAS
+                const dataServer = await response.json();
+                questions = dataServer.soal;
+                dataPesertaServer = dataServer.siswa;
+                
+                // Menyuntikkan daftar nama pendaftar ke elemen Datalist
+                const dataList = document.getElementById('list-nama');
+                dataPesertaServer.forEach(p => {
+                    let option = document.createElement('option');
+                    option.value = p.nama;
+                    dataList.appendChild(option);
+                });
+
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('login-screen').style.display = 'flex';
+                
+            } catch (err) {
+                alert("Terjadi kesalahan koneksi. Pastikan URL GAS benar.");
+            }
+        });
+
+        // Fungsi Auto-fill: Mendeteksi saat siswa mengetik/memilih nama
+        function autofillSiswa() {
+            const namaDiketik = document.getElementById('nama').value;
+            // Mencari nama di database lokal browser
+            const dataSiswa = dataPesertaServer.find(p => p.nama === namaDiketik);
+            
+            if (dataSiswa) {
+                // Jika nama ditemukan, isi kolom lainnya otomatis
+                document.getElementById('sekolah').value = dataSiswa.sekolah;
+                document.getElementById('kelas').value = dataSiswa.kelas;
+                document.getElementById('wa').value = dataSiswa.wa;
+            } else {
+                // Jika nama dihapus / salah ketik, kosongkan kembali
+                document.getElementById('sekolah').value = '';
+                document.getElementById('kelas').value = '';
+                document.getElementById('wa').value = '';
+            }
+        }
+
+        // Fitur Ubah Ukuran Font
+        function ubahUkuranFont(ukuran) {
+            const quizScreen = document.getElementById('quiz-screen');
+            quizScreen.classList.remove('font-small', 'font-normal', 'font-large');
+            quizScreen.classList.add(ukuran);
+        }
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('hidden');
         }
 
-        // Fungsi untuk mengubah ukuran font
-        function ubahUkuranFont(ukuran) {
-            const quizScreen = document.getElementById('quiz-screen');
-            // Hapus semua class font sebelumnya
-            quizScreen.classList.remove('font-small', 'font-normal', 'font-large');
-            // Tambahkan class font yang baru dipilih
-            quizScreen.classList.add(ukuran);
-        }
-        
-        // Atur ukuran default saat halaman dimuat
-        document.addEventListener("DOMContentLoaded", () => {
-            ubahUkuranFont('font-normal');
-        });
-
-        // Event Submit Biodata
-        document.getElementById('biodata-form').addEventListener('submit', async (e) => {
-        isExamActive = true; // Aktifkan sistem peringatan
+        document.getElementById('biodata-form').addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Validasi: Pastikan nama yang dipilih benar-benar terdaftar
+            const namaDiketik = document.getElementById('nama').value;
+            const validasiNama = dataPesertaServer.find(p => p.nama === namaDiketik);
+            
+            if (!validasiNama) {
+                alert("Nama tidak ditemukan! Silakan pilih nama dari daftar yang tersedia.");
+                return;
+            }
+
             biodata = {
                 nama: document.getElementById('nama').value,
                 asalSekolah: document.getElementById('sekolah').value,
@@ -217,41 +254,32 @@
             };
             
             document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
-
-            try {
-                const response = await fetch(SCRIPT_URL);
-                if (!response.ok) throw new Error('Gagal mengambil data');
-                
-                questions = await response.json();
-                const memoriTersimpan = localStorage.getItem('jawaban_cbt_tka');
-                if (memoriTersimpan) {
-                    answers = JSON.parse(memoriTersimpan);
-                }
-                
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('quiz-screen').style.display = 'flex';
-                document.getElementById('timer').style.display = 'block';
-                document.getElementById('btn-toggle-nav').style.display = 'block';
-                
-                buildGrid();
-                showQuestion(0);
-                
-                timerInt = setInterval(() => {
-                    timeRem--;
-                    let m = Math.floor(timeRem / 60).toString().padStart(2, '0');
-                    let s = (timeRem % 60).toString().padStart(2, '0');
-                    document.getElementById('timer').innerText = `${m}:${s}`;
-                    
-                    if(timeRem <= 0) {
-                        alert("Waktu pengerjaan telah habis!");
-                        submitQuiz(true);
-                    }
-                }, 1000);
-            } catch (err) {
-                alert("Terjadi kesalahan koneksi. Pastikan URL GAS benar.");
-                location.reload();
+            
+            // Cek Memori HP (Auto-Save Local Storage)
+            const memoriTersimpan = localStorage.getItem('jawaban_cbt_tka');
+            if (memoriTersimpan) {
+                answers = JSON.parse(memoriTersimpan);
             }
+            
+            document.getElementById('quiz-screen').style.display = 'flex';
+            document.getElementById('timer').style.display = 'block';
+            document.getElementById('btn-toggle-nav').style.display = 'block';
+            isExamActive = true; // Aktifkan sistem pop-up peringatan
+            
+            buildGrid();
+            showQuestion(0);
+            
+            timerInt = setInterval(() => {
+                timeRem--;
+                let m = Math.floor(timeRem / 60).toString().padStart(2, '0');
+                let s = (timeRem % 60).toString().padStart(2, '0');
+                document.getElementById('timer').innerText = `${m}:${s}`;
+                
+                if(timeRem <= 0) {
+                    alert("Waktu pengerjaan telah habis!");
+                    submitQuiz(true);
+                }
+            }, 1000);
         });
 
         function buildGrid() {
@@ -260,7 +288,10 @@
             questions.forEach((q, i) => {
                 const btn = document.createElement('div');
                 btn.className = 'grid-btn';
-                if (answers[q.id]) btn.classList.add('answered');
+                
+                // Warnai tombol biru jika sudah ada di memori auto-save
+                if (answers[q.id]) btn.classList.add('answered'); 
+                
                 btn.innerText = q.id;
                 btn.id = 'grid-' + i;
                 btn.onclick = () => showQuestion(i);
@@ -305,7 +336,7 @@
 
         function saveAnswer(id, key) {
             answers[id] = key;
-            localStorage.setItem('jawaban_cbt_tka', JSON.stringify(answers));
+            localStorage.setItem('jawaban_cbt_tka', JSON.stringify(answers)); 
             document.getElementById('grid-'+currentIndex).classList.add('answered');
             showQuestion(currentIndex); 
         }
@@ -325,10 +356,9 @@
             document.getElementById('timer').style.display = 'none';
             document.getElementById('btn-toggle-nav').style.display = 'none';
             
-            document.getElementById('loading').innerText = 'Menyimpan jawaban (Mohon tunggu dan jangan tutup halaman)...';
+            document.getElementById('loading').innerText = 'Menyimpan jawaban (Mohon tunggu)...';
             document.getElementById('loading').style.display = 'block';
 
-            // FITUR JITTER & TOKEN: Jeda acak 0 - 3 detik dan pengiriman kode rahasia
             const payload = { 
                 token: "CBT_DUA_DIMENSI_2026",
                 biodata, 
@@ -349,11 +379,10 @@
                     
                     document.getElementById('loading').style.display = 'none';
                     if (result.status === 'success') {
-                        isExamActive = false; // Matikan sistem peringatan karena sudah selesai
                         localStorage.removeItem('jawaban_cbt_tka');
-                        document.getElementById('result-screen').style.display = 'flex';
+                        isExamActive = false; 
                         
-                        // Menampilkan data per mapel TKA SMP
+                        document.getElementById('result-screen').style.display = 'flex';
                         document.getElementById('res-total').innerText = result.total;
                         document.getElementById('res-rerata').innerText = result.rerata;
                         document.getElementById('res-bi').innerText = result.scoreBI;
@@ -361,7 +390,6 @@
                         document.getElementById('res-bing').innerText = result.scoreBING;
                         document.getElementById('res-ipa').innerText = result.scoreIPA;
                     } else {
-                        // Memunculkan pesan error spesifik dari GAS jika server overload
                         alert("Pesan Sistem: " + result.message);
                         document.getElementById('quiz-screen').style.display = 'flex';
                         document.getElementById('btn-toggle-nav').style.display = 'block';
@@ -374,10 +402,9 @@
                 }
             }, randomDelay);
         }
-        // FITUR PERINGATAN LAPIS 1: Mencegah refresh atau tutup tab secara tidak sengaja
+
         window.addEventListener('beforeunload', function (e) {
             if (isExamActive) {
-                // Browser modern akan memunculkan teks peringatan bawaan mereka sendiri
                 e.preventDefault();
                 e.returnValue = ''; 
             }
