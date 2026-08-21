@@ -178,6 +178,7 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOZHsWzyZUm85NsjEzJHeks1fB7QtyhvzMXifHu3ucwpUq5Q49f_WuGY9TNKq9fxyQ/exec'; 
         
         let questions = [];
+        let isExamActive = false; // Penanda apakah ujian sedang berlangsung
         let answers = {};
         let biodata = {};
         let currentIndex = 0;
@@ -206,6 +207,7 @@
 
         // Event Submit Biodata
         document.getElementById('biodata-form').addEventListener('submit', async (e) => {
+        isExamActive = true; // Aktifkan sistem peringatan
             e.preventDefault();
             biodata = {
                 nama: document.getElementById('nama').value,
@@ -341,6 +343,8 @@
                     
                     document.getElementById('loading').style.display = 'none';
                     if (result.status === 'success') {
+                        isExamActive = false; // Matikan sistem peringatan karena sudah selesai
+                        localStorage.removeItem('jawaban_cbt_tka');
                         document.getElementById('result-screen').style.display = 'flex';
                         
                         // Menampilkan data per mapel TKA SMP
@@ -364,6 +368,14 @@
                 }
             }, randomDelay);
         }
+        // FITUR PERINGATAN LAPIS 1: Mencegah refresh atau tutup tab secara tidak sengaja
+        window.addEventListener('beforeunload', function (e) {
+            if (isExamActive) {
+                // Browser modern akan memunculkan teks peringatan bawaan mereka sendiri
+                e.preventDefault();
+                e.returnValue = ''; 
+            }
+        });
     </script>
 </body>
 </html>
