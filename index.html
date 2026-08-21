@@ -330,10 +330,13 @@
                     document.getElementById('loading').style.display = 'none';
                     if (result.status === 'success') {
                         document.getElementById('result-screen').style.display = 'flex';
+                        
+                        // Menampilkan data per mapel TKA SMP
                         document.getElementById('res-total').innerText = result.total;
-                        document.getElementById('res-twk').innerText = result.scoreTWK;
-                        document.getElementById('res-tiu').innerText = result.scoreTIU;
-                        document.getElementById('res-tkp').innerText = result.scoreTKP;
+                        document.getElementById('res-bi').innerText = result.scoreBI;
+                        document.getElementById('res-mtk').innerText = result.scoreMTK;
+                        document.getElementById('res-bing').innerText = result.scoreBING;
+                        document.getElementById('res-ipa').innerText = result.scoreIPA;
                     } else {
                         // Memunculkan pesan error spesifik dari GAS jika server overload
                         alert("Pesan Sistem: " + result.message);
