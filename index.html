@@ -1,1 +1,353 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT DUA DIMENSI SKD 2026</title>
+    <!-- Ganti URL href di bawah ini dengan link logo/favicon Anda -->
+    <link rel="icon" href="https://ucarecdn.com/e9a7657b-e51e-4c43-a0bb-ee085ad4ca22/favicon.ico" type="image/png">
+    
+    <style>
+        :root { --primary: #0e58a6; --primary-hover: #0b4685; --bg-color: #f4f7f6; --border: #e0e0e0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Header & Footer */
+        header { background: var(--primary); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        footer { background: white; color: var(--text-muted); text-align: center; padding: 1rem; border-top: 1px solid var(--border); margin-top: auto; font-size: 0.9rem; }
+        .header-controls { display: flex; gap: 1rem; align-items: center; }
+        .timer { font-size: 1.1rem; font-weight: bold; background: rgba(255, 255, 255, 0.2); padding: 0.4rem 0.8rem; border-radius: 5px; display: none; }
+        
+        /* Layout */
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 5%; display: none; gap: 1.5rem; width: 100%; align-items: flex-start; }
+        .card { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+        
+        /* Buttons */
+        button { background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.2s; }
+        button:hover { background: var(--primary-hover); }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: white; }
+        .btn-menu { background: transparent; border: 1px solid white; padding: 0.4rem 0.8rem; font-size: 0.9rem; display: none; }
+        .btn-menu:hover { background: rgba(255,255,255,0.2); }
+        .btn-danger { background: #dc3545; width: 100%; margin-top: 2rem;}
+        .btn-danger:hover { background: #c82333; }
+        
+        /* Form Biodata */
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .form-group input { width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; }
+        
+        /* Quiz Area */
+        #quiz-screen { flex-direction: column; }
+        @media (min-width: 768px) { #quiz-screen { flex-direction: row; } }
+        .main-content { flex: 3; display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
+        
+        /* Sidebar (Navigasi) */
+        .sidebar { flex: 1; transition: 0.3s; width: 100%; }
+        .sidebar.hidden { display: none; }
+        
+        /* Opsi Jawaban */
+        .option-label { display: flex; align-items: flex-start; padding: 1rem; border: 1px solid var(--border); border-radius: 5px; margin-bottom: 0.8rem; cursor: pointer; transition: 0.2s; }
+        .option-label:hover { background: #f0f6fa; border-color: var(--primary); }
+        .option-label.selected { background: #e6f0f9; border-color: var(--primary); font-weight: 500; }
+        .option-label input { margin-right: 1rem; margin-top: 0.3rem; accent-color: var(--primary); cursor: pointer; }
+        
+        /* Grid Nomor */
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
+        .grid-btn { padding: 0.5rem; text-align: center; border: 1px solid var(--border); background: white; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+        .grid-btn:hover { background: #e6f0f9; }
+        .grid-btn.answered { background: var(--primary); color: white; border-color: var(--primary); }
+        .grid-btn.active { border: 2px solid #ff9800; font-weight: bold; }
+        
+        #loading { display: none; text-align: center; padding: 3rem; font-weight: bold; color: var(--primary); font-size: 1.2rem; }
+        .score-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid var(--border); text-align: left;}
+    
+    /* Mode Ukuran Font */
+        .font-small #q-text { font-size: 0.95rem; }
+        .font-small .option-label { font-size: 0.9rem; }
+        
+        .font-normal #q-text { font-size: 1.1rem; }
+        .font-normal .option-label { font-size: 1rem; }
+        
+        .font-large #q-text { font-size: 1.3rem; }
+        .font-large .option-label { font-size: 1.15rem; }
 
+    </style>
+</head>
+<body>
+    <header>
+        <div style="font-size: 1.2rem; font-weight: bold; text-align: center;">Tryout SKD Dua Dimensi</div>
+        <div class="header-controls">
+            <!-- Dropdown Mode Font -->
+            <select onchange="ubahUkuranFont(this.value)" style="padding: 0.3rem; border-radius: 4px; background: rgba(255,255,255,0.2); color: white; border: 1px solid white; font-size: 0.9rem; cursor: pointer; outline: none;">
+                <option value="font-small" style="color: black;">Kecil</option>
+                <option value="font-normal" selected style="color: black;">Sedang</option>
+                <option value="font-large" style="color: black;">Besar</option>
+            </select>
+            
+            <div id="timer" class="timer">60:00</div>
+            <button id="btn-toggle-nav" class="btn-menu" onclick="toggleSidebar()">☰</button>
+        </div>
+    </header>
+
+    <!-- Form Biodata -->
+    <div id="login-screen" class="container" style="display: flex; max-width: 600px;">
+        <div class="card" style="width: 100%;">
+            <h2 style="margin-bottom: 1.5rem; color: var(--primary); text-align: center;">Data Peserta Ujian</h2>
+            <form id="biodata-form">
+                <div class="form-group"><label>Nama Lengkap</label><input type="text" id="nama" required></div>
+                <div class="form-group"><label>Asal Sekolah</label><input type="text" id="sekolah" required></div>
+                <div class="form-group">
+                    <label>Kelas</label>
+                    <select id="kelas" required style="width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; background-color: white; cursor: pointer;">
+                        <option value="" disabled selected>Pilih Kelas...</option>
+                        <option value="Kelas 10">Kelas 10</option>
+                        <option value="Kelas 11">Kelas 11</option>
+                        <option value="Kelas 12">Kelas 12</option>
+                        <option value="Alumni / Umum">Alumni / Umum</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Nomor WhatsApp</label><input type="number" id="wa" required></div>
+                <button type="submit" style="width: 100%; margin-top: 1rem;">Mulai Mengerjakan</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="loading">Memuat soal dari server... Mohon tunggu...</div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="container">
+        <div class="main-content">
+            <div class="card">
+                <div style="color: var(--primary); font-weight:bold; margin-bottom:0.5rem; text-transform: uppercase; letter-spacing: 1px;" id="q-category"></div>
+                <h2 style="margin-bottom: 1rem;">Soal No. <span id="q-number">1</span></h2>
+                <div id="q-text" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 1.5rem;"></div>
+                <div id="options-container"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
+                <button id="btn-prev" class="btn-outline" onclick="changeQ(-1)">&#8592; Sebelumnya</button>
+                <button id="btn-next" onclick="changeQ(1)">Selanjutnya &#8594;</button>
+            </div>
+        </div>
+        
+        <!-- Sidebar Navigasi -->
+        <aside class="sidebar card" id="sidebar">
+            <h3 style="text-align: center; margin-bottom: 1rem;">Navigasi Soal</h3>
+            <div class="grid" id="nav-grid"></div>
+            <button class="btn-danger" onclick="submitQuiz()">Akhiri Ujian</button>
+        </aside>
+    </div>
+
+    <!-- Result Screen -->
+    <!-- Result Screen -->
+    <div id="result-screen" class="container" style="max-width: 500px; text-align: center; display: none;">
+        <div class="card" style="width: 100%;">
+            <h2>Ujian Selesai!</h2>
+            <p style="color: #666; margin-top: 0.5rem;">Berikut adalah perolehan nilai Anda:</p>
+            <h1 style="font-size: 4rem; color: var(--primary); margin: 1rem 0;" id="res-total">0</h1>
+            
+            <div style="margin-bottom: 2rem;">
+                <div class="score-row"><span>Bahasa Indonesia</span><strong id="res-bi">0</strong></div>
+                <div class="score-row"><span>Matematika</span><strong id="res-mtk">0</strong></div>
+                <div class="score-row"><span>Bahasa Inggris</span><strong id="res-bing">0</strong></div>
+                <div class="score-row"><span>IPA</span><strong id="res-ipa">0</strong></div>
+            </div>
+            
+            <button onclick="location.reload()" style="width: 100%;">Kembali ke Awal</button>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 Dua Dimensi Yogyakarta. All rights reserved.
+    </footer>
+
+    <script>
+        // GANTI BAGIAN INI DENGAN LINK WEB APP DARI GOOGLE APPS SCRIPT ANDA
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOZHsWzyZUm85NsjEzJHeks1fB7QtyhvzMXifHu3ucwpUq5Q49f_WuGY9TNKq9fxyQ/exec'; 
+        
+        let questions = [];
+        let answers = {};
+        let biodata = {};
+        let currentIndex = 0;
+        let timeRem = 3600; // 60 menit 
+        let timerInt;
+
+        // Fungsi Hide/Unhide Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        // Fungsi untuk mengubah ukuran font
+        function ubahUkuranFont(ukuran) {
+            const quizScreen = document.getElementById('quiz-screen');
+            // Hapus semua class font sebelumnya
+            quizScreen.classList.remove('font-small', 'font-normal', 'font-large');
+            // Tambahkan class font yang baru dipilih
+            quizScreen.classList.add(ukuran);
+        }
+        
+        // Atur ukuran default saat halaman dimuat
+        document.addEventListener("DOMContentLoaded", () => {
+            ubahUkuranFont('font-normal');
+        });
+
+        // Event Submit Biodata
+        document.getElementById('biodata-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            biodata = {
+                nama: document.getElementById('nama').value,
+                asalSekolah: document.getElementById('sekolah').value,
+                kelas: document.getElementById('kelas').value,
+                nomorWA: document.getElementById('wa').value
+            };
+            
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) throw new Error('Gagal mengambil data');
+                
+                questions = await response.json();
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('quiz-screen').style.display = 'flex';
+                document.getElementById('timer').style.display = 'block';
+                document.getElementById('btn-toggle-nav').style.display = 'block';
+                
+                buildGrid();
+                showQuestion(0);
+                
+                timerInt = setInterval(() => {
+                    timeRem--;
+                    let m = Math.floor(timeRem / 60).toString().padStart(2, '0');
+                    let s = (timeRem % 60).toString().padStart(2, '0');
+                    document.getElementById('timer').innerText = `${m}:${s}`;
+                    
+                    if(timeRem <= 0) {
+                        alert("Waktu pengerjaan telah habis!");
+                        submitQuiz(true);
+                    }
+                }, 1000);
+            } catch (err) {
+                alert("Terjadi kesalahan koneksi. Pastikan URL GAS benar.");
+                location.reload();
+            }
+        });
+
+        function buildGrid() {
+            const grid = document.getElementById('nav-grid');
+            grid.innerHTML = '';
+            questions.forEach((q, i) => {
+                const btn = document.createElement('div');
+                btn.className = 'grid-btn';
+                btn.innerText = q.id;
+                btn.id = 'grid-' + i;
+                btn.onclick = () => showQuestion(i);
+                grid.appendChild(btn);
+            });
+        }
+
+        function showQuestion(index) {
+            currentIndex = index;
+            const q = questions[index];
+            document.getElementById('q-category').innerText = q.category;
+            document.getElementById('q-number').innerText = q.id;
+            document.getElementById('q-text').innerHTML = q.text; 
+            
+            const optCont = document.getElementById('options-container');
+            optCont.innerHTML = '';
+            
+            for(let [key, val] of Object.entries(q.options)) {
+                if(!val) continue; 
+                const isSel = answers[q.id] === key;
+                optCont.innerHTML += `
+                    <label class="option-label ${isSel ? 'selected' : ''}">
+                        <input type="radio" name="opt" value="${key}" ${isSel ? 'checked' : ''} onchange="saveAnswer(${q.id}, '${key}')">
+                        <span><strong>${key}.</strong> ${val}</span>
+                    </label>
+                `;
+            }
+            
+            document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
+            const btnNext = document.getElementById('btn-next');
+            if(index === questions.length - 1) {
+                btnNext.innerText = 'Selesai';
+                btnNext.onclick = () => submitQuiz();
+            } else {
+                btnNext.innerText = 'Selanjutnya \u2192';
+                btnNext.onclick = () => changeQ(1);
+            }
+            
+            document.querySelectorAll('.grid-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('grid-'+index).classList.add('active');
+        }
+
+        function saveAnswer(id, key) {
+            answers[id] = key;
+            document.getElementById('grid-'+currentIndex).classList.add('answered');
+            showQuestion(currentIndex); 
+        }
+
+        function changeQ(step) {
+            let newIndex = currentIndex + step;
+            if(newIndex >= 0 && newIndex < questions.length) {
+                showQuestion(newIndex);
+            }
+        }
+
+        async function submitQuiz(force = false) {
+            if(!force && !confirm("Apakah Anda yakin ingin mengumpulkan jawaban sekarang?")) return;
+            
+            clearInterval(timerInt);
+            document.getElementById('quiz-screen').style.display = 'none';
+            document.getElementById('timer').style.display = 'none';
+            document.getElementById('btn-toggle-nav').style.display = 'none';
+            
+            document.getElementById('loading').innerText = 'Menyimpan jawaban (Mohon tunggu dan jangan tutup halaman)...';
+            document.getElementById('loading').style.display = 'block';
+
+            // FITUR JITTER & TOKEN: Jeda acak 0 - 3 detik dan pengiriman kode rahasia
+            const payload = { 
+                token: "CBT_DUA_DIMENSI_2026",
+                biodata, 
+                answers 
+            };
+            
+            const randomDelay = Math.floor(Math.random() * 3000);
+
+            setTimeout(async () => {
+                try {
+                    const response = await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    document.getElementById('loading').style.display = 'none';
+                    if (result.status === 'success') {
+                        document.getElementById('result-screen').style.display = 'flex';
+                        document.getElementById('res-total').innerText = result.total;
+                        document.getElementById('res-twk').innerText = result.scoreTWK;
+                        document.getElementById('res-tiu').innerText = result.scoreTIU;
+                        document.getElementById('res-tkp').innerText = result.scoreTKP;
+                    } else {
+                        // Memunculkan pesan error spesifik dari GAS jika server overload
+                        alert("Pesan Sistem: " + result.message);
+                        document.getElementById('quiz-screen').style.display = 'flex';
+                        document.getElementById('btn-toggle-nav').style.display = 'block';
+                    }
+                } catch (err) {
+                    alert("Koneksi terputus. Silakan klik tombol 'Akhiri Ujian' sekali lagi.");
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('quiz-screen').style.display = 'flex';
+                    document.getElementById('btn-toggle-nav').style.display = 'block';
+                }
+            }, randomDelay);
+        }
+    </script>
+</body>
+</html>
