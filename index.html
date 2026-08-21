@@ -52,9 +52,8 @@
         .option-label.selected { background: #e6f0f9; border-color: var(--primary); font-weight: 500; }
         .option-label input { margin-right: 1rem; margin-top: 0.3rem; accent-color: var(--primary); cursor: pointer; }
         
-        .font-small #q-text { font-size: 0.95rem; } .font-small .option-label { font-size: 0.9rem; }
-        .font-normal #q-text { font-size: 1.1rem; } .font-normal .option-label { font-size: 1rem; }
-        .font-large #q-text { font-size: 1.3rem; } .font-large .option-label { font-size: 1.15rem; }
+        /* Font size di-lock ke ukuran normal */
+        #q-text { font-size: 1.1rem; } .option-label { font-size: 1rem; }
         
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
         .grid-btn { padding: 0.5rem; text-align: center; border: 1px solid var(--border); background: white; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
@@ -69,7 +68,7 @@
     <header>
         <div style="font-size: 1.2rem; font-weight: bold;">CBT TKA SMP</div>
         <div class="header-controls">
-            
+            <!-- Fitur Ukuran Font Sudah Dihapus -->
             <div id="timer" class="timer">60:00</div>
             <button id="btn-toggle-nav" class="btn-menu" onclick="toggleSidebar()">☰</button>
         </div>
@@ -83,7 +82,7 @@
                 <div class="form-group">
                     <label>Nama Lengkap</label>
                     <div class="custom-select-box" id="select-box" onclick="toggleDropdown()">Pilih Nama Lengkap Anda</div>
-                    <input type="hidden" id="nama"> <!-- Input tersembunyi penampung nilai akhir -->
+                    <input type="hidden" id="nama"> 
                     
                     <div class="dropdown-menu" id="dropdown-menu">
                         <div class="dropdown-search">
@@ -96,6 +95,9 @@
                 <div class="form-group"><label>Asal Sekolah</label><input type="text" id="sekolah" class="input-readonly" readonly required></div>
                 <div class="form-group"><label>Kelas</label><input type="text" id="kelas" class="input-readonly" readonly required></div>
                 
+                <!-- Nomor WhatsApp di-Hidden agar tetap bisa dikirim ke Spreadsheet tanpa terlihat -->
+                <input type="hidden" id="wa">
+                
                 <button type="submit" style="width: 100%; margin-top: 1rem;">Mulai Mengerjakan</button>
             </form>
         </div>
@@ -103,7 +105,7 @@
 
     <div id="loading">Memuat sistem... Mohon tunggu...</div>
 
-    <div id="quiz-screen" class="container font-normal">
+    <div id="quiz-screen" class="container">
         <div class="main-content">
             <div class="card">
                 <div style="color: var(--primary); font-weight:bold; margin-bottom:0.5rem; text-transform: uppercase; letter-spacing: 1px;" id="q-category"></div>
@@ -176,11 +178,9 @@
                 questions = dataServer.soal;
                 dataPesertaServer = dataServer.siswa;
                 
-                // 1. Ekstrak nama, Hapus Duplikat, dan Urutkan A-Z
                 let rawNames = dataPesertaServer.map(p => p.nama);
                 let uniqueSortedNames = [...new Set(rawNames)].sort();
 
-                // 2. Bangun daftar Custom Dropdown
                 const dropdownList = document.getElementById('dropdown-list');
                 uniqueSortedNames.forEach(nama => {
                     let div = document.createElement('div');
@@ -198,14 +198,12 @@
             }
         });
 
-        // Tampilkan atau Sembunyikan Custom Dropdown
         function toggleDropdown() {
             const menu = document.getElementById('dropdown-menu');
             menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
             document.getElementById('search-nama').focus();
         }
 
-        // Fungsi Filter Pencarian di dalam Dropdown
         function filterNama() {
             let filter = document.getElementById('search-nama').value.toUpperCase();
             let items = document.querySelectorAll('.dropdown-item');
@@ -220,7 +218,6 @@
             });
         }
 
-        // Eksekusi saat Nama diklik dari daftar
         function pilihNama(namaPilihan) {
             document.getElementById('select-box').innerText = namaPilihan;
             document.getElementById('nama').value = namaPilihan;
@@ -230,21 +227,14 @@
             if (dataSiswa) {
                 document.getElementById('sekolah').value = dataSiswa.sekolah;
                 document.getElementById('kelas').value = dataSiswa.kelas;
-                document.getElementById('wa').value = dataSiswa.wa;
+                document.getElementById('wa').value = dataSiswa.wa; // Menugaskan nilai WA ke elemen hidden
             }
         }
 
-        // Tutup dropdown jika klik di luar kotak
         window.onclick = function(event) {
             if (!event.target.matches('.custom-select-box') && !event.target.closest('.dropdown-menu')) {
                 document.getElementById('dropdown-menu').style.display = 'none';
             }
-        }
-
-        function ubahUkuranFont(ukuran) {
-            const quizScreen = document.getElementById('quiz-screen');
-            quizScreen.classList.remove('font-small', 'font-normal', 'font-large');
-            quizScreen.classList.add(ukuran);
         }
 
         function toggleSidebar() {
@@ -264,7 +254,7 @@
                 nama: inputNama,
                 asalSekolah: document.getElementById('sekolah').value,
                 kelas: document.getElementById('kelas').value,
-                nomorWA: document.getElementById('wa').value
+                nomorWA: document.getElementById('wa').value // Membaca nilai dari elemen hidden
             };
             
             document.getElementById('login-screen').style.display = 'none';
