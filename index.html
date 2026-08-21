@@ -139,12 +139,25 @@
 
     <!-- Result Screen -->
     <!-- Result Screen -->
+    <!-- Result Screen -->
     <div id="result-screen" class="container" style="max-width: 500px; text-align: center; display: none;">
         <div class="card" style="width: 100%;">
             <h2>Ujian Selesai!</h2>
             <p style="color: #666; margin-top: 0.5rem;">Berikut adalah perolehan nilai Anda:</p>
-            <h1 style="font-size: 4rem; color: var(--primary); margin: 1rem 0;" id="res-total">0</h1>
             
+            <!-- Area Skor Utama -->
+            <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0; padding-bottom: 1.5rem; border-bottom: 1px dashed var(--border);">
+                <div>
+                    <p style="font-size: 0.9rem; color: #666; font-weight: bold;">TOTAL SKOR</p>
+                    <h1 style="font-size: 3rem; color: var(--primary);" id="res-total">0</h1>
+                </div>
+                <div>
+                    <p style="font-size: 0.9rem; color: #666; font-weight: bold;">RATA-RATA</p>
+                    <h1 style="font-size: 3rem; color: #ff9800;" id="res-rerata">0</h1>
+                </div>
+            </div>
+            
+            <!-- Rincian Nilai Mapel -->
             <div style="margin-bottom: 2rem;">
                 <div class="score-row"><span>Bahasa Indonesia</span><strong id="res-bi">0</strong></div>
                 <div class="score-row"><span>Matematika</span><strong id="res-mtk">0</strong></div>
