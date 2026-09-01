@@ -1,86 +1,194 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBT DUA DIMENSI</title>
-    <link rel="icon" href="https://ucarecdn.com/e9a7657b-e51e-4c43-a0bb-ee085ad4ca22/favicon.ico" type="image/png">
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>CBT TKA DUA DIMENSI</title>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="https://ucarecdn.com/e9a7657b-e51e-4c43-a0bb-ee085ad4ca22/favicon.ico">
     
     <style>
-        :root { --primary: #0e58a6; --primary-hover: #0b4685; --bg-color: #f4f7f6; --border: #ccc; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-color); color: #333; display: flex; flex-direction: column; min-height: 100vh; }
-        
-        header { background: var(--primary); color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        footer { background: white; text-align: center; padding: 1rem; border-top: 1px solid var(--border); margin-top: auto; font-size: 0.9rem; }
-        .header-controls { display: flex; gap: 1rem; align-items: center; }
-        .timer { font-size: 1.1rem; font-weight: bold; background: rgba(255, 255, 255, 0.2); padding: 0.4rem 0.8rem; border-radius: 5px; display: none; }
-        
-        .container { max-width: 1200px; margin: 2rem auto; padding: 0 5%; display: none; gap: 1.5rem; width: 100%; align-items: flex-start; }
-        .card { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid var(--border); }
-        
-        button { background: var(--primary); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: 0.2s; }
-        button:hover { background: var(--primary-hover); }
-        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
-        .btn-outline:hover { background: var(--primary); color: white; }
-        .btn-menu { background: transparent; border: 1px solid white; padding: 0.4rem 0.8rem; font-size: 0.9rem; display: none; }
-        .btn-danger { background: #dc3545; width: 100%; margin-top: 2rem;}
-        
-        .form-group { margin-bottom: 1.5rem; position: relative; }
-        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; font-size: 0.95rem; }
-        .form-group input { width: 100%; padding: 0.8rem; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; }
-        .input-readonly { background-color: #e9ecef !important; color: #666; cursor: not-allowed; border: 1px solid #ccc; }
-        
-        /* Custom Dropdown Styling */
-        .custom-select-box { padding: 0.8rem; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: white; display: flex; justify-content: space-between; align-items: center; }
-        .custom-select-box:after { content: "▼"; font-size: 0.8rem; color: #666; }
-        .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 0 0 4px 4px; z-index: 10; margin-top: -1px; }
-        .dropdown-search { padding: 0.5rem; background: #f8f9fa; border-bottom: 1px solid var(--border); }
-        .dropdown-search input { width: 100%; padding: 0.5rem; border: 1px solid var(--primary); border-radius: 3px; outline: none; }
-        .dropdown-list { max-height: 200px; overflow-y: auto; }
-        .dropdown-item { padding: 0.8rem; cursor: pointer; border-bottom: 1px solid #eee; }
-        .dropdown-item:hover { background: #4a90e2; color: white; }
-        
-        #quiz-screen { flex-direction: column; }
-        @media (min-width: 768px) { #quiz-screen { flex-direction: row; } }
-        .main-content { flex: 3; display: flex; flex-direction: column; gap: 1.5rem; width: 100%; }
-        .sidebar { flex: 1; transition: 0.3s; width: 100%; }
-        .sidebar.hidden { display: none; }
-        
-        .option-label { display: flex; align-items: flex-start; padding: 1rem; border: 1px solid var(--border); border-radius: 5px; margin-bottom: 0.8rem; cursor: pointer; transition: 0.2s; }
-        .option-label:hover { background: #f0f6fa; border-color: var(--primary); }
-        .option-label.selected { background: #e6f0f9; border-color: var(--primary); font-weight: 500; }
-        .option-label input { margin-right: 1rem; margin-top: 0.3rem; accent-color: var(--primary); cursor: pointer; }
-        
-        /* Font size di-lock ke ukuran normal */
-        #q-text { font-size: 1.1rem; } .option-label { font-size: 1rem; }
-        
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; }
-        .grid-btn { padding: 0.5rem; text-align: center; border: 1px solid var(--border); background: white; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
-        .grid-btn.answered { background: var(--primary); color: white; border-color: var(--primary); }
-        .grid-btn.active { border: 2px solid #ff9800; font-weight: bold; }
-        
-        #loading { display: none; text-align: center; padding: 3rem; font-weight: bold; color: var(--primary); font-size: 1.2rem; }
-        .score-row { display: flex; justify-content: space-between; padding: 0.8rem 0; border-bottom: 1px solid var(--border); text-align: left;}
+:root { 
+    --primary: #0e58a6; 
+    --primary-dark: #0b4685; 
+    --secondary: #64748b; 
+    --bg: #f8fafc; 
+    --card: #ffffff; 
+    --text: #334155; 
+    --success: #10b981; 
+    --danger: #ef4444;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+}
+
+/* --- DARK MODE OVERRIDES --- */
+body.dark-mode { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; --border: #334155; --secondary: #94a3b8; }
+body.dark-mode .opsi-item:hover { background: #334155; }
+body.dark-mode .opsi-item:has(input:checked) { background: #1e3a8a; border-color: #3b82f6; }
+body.dark-mode .nav-btn { background: var(--card); border-color: var(--border); color: var(--secondary); }
+body.dark-mode .nav-btn:hover { border-color: #64748b; color: #f1f5f9; }
+body.dark-mode .nav-btn.active { background: #1e3a8a; border-color: #3b82f6; color: #93c5fd; }
+body.dark-mode .nav-btn.filled { background: #059669; color: white; border-color: #059669; }
+body.dark-mode .timer-display { background: #1e293b; color: #fbbf24; border-color: #334155; }
+body.dark-mode .tab-switch-warning { background: #450a0a; color: #fca5a5; border-color: #7f1d1d; }
+body.dark-mode .m-timer { background: #1e293b; color: #fbbf24; border-color: #334155; }
+body.dark-mode .m-violation { background: #450a0a; color: #fca5a5; border-color: #7f1d1d; }
+body.dark-mode .form-control { background: #0f172a; color: #f1f5f9; border-color: var(--border); }
+body.dark-mode .table-bs th { background: var(--primary-dark); border-color: var(--border); }
+body.dark-mode .row-bs:hover { background-color: #334155; }
+body.dark-mode .rules-box { background: #0f172a !important; color: #f1f5f9 !important; border-color: #334155 !important; }
+
+/* --- FONT SIZE MODES --- */
+body.font-small { font-size: 14px; }
+body.font-small .teks-soal { font-size: 1rem; }
+body.font-small .opsi-content { font-size: 0.95rem; }
+
+body.font-medium { font-size: 16px; }
+body.font-medium .teks-soal { font-size: 1.1rem; }
+body.font-medium .opsi-content { font-size: 1.05rem; }
+
+body.font-large { font-size: 18px; }
+body.font-large .teks-soal { font-size: 1.35rem; }
+body.font-large .opsi-content { font-size: 1.25rem; }
+
+body { font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; height: 100vh; display: flex; flex-direction: column; -webkit-user-select: none; user-select: none; transition: background-color 0.3s ease, color 0.3s ease; }
+
+.bacaan-panjang p { text-align: justify; }
+
+#loginScreen, #resultScreen, #rulesScreen { position: fixed; inset: 0; z-index: 999; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--bg) 0%, var(--border) 100%); }
+.login-box { background: var(--card); width: 90%; max-width: 420px; padding: 2.5rem 2rem; border-radius: 1.5rem; box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+.login-header { text-align: center; margin-bottom: 2rem; } 
+.login-header h2 { margin: 0; color: var(--primary); font-weight: 800; font-size: 1.6rem;}
+
+.form-group { margin-bottom: 15px; position: relative; }
+.form-group label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.9rem; color: var(--secondary); }
+.form-control { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px; box-sizing: border-box; font-size: 0.95rem; background: var(--bg); color: var(--text); }
+.form-control-readonly { background: #e9ecef !important; color: #666; cursor: not-allowed; }
+
+.custom-select-box { padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px; cursor: pointer; background: var(--bg); display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; }
+.dropdown-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--card); border: 1px solid var(--border); box-shadow: var(--shadow-lg); border-radius: 10px; z-index: 10; margin-top: 5px; overflow: hidden; }
+.dropdown-search { padding: 10px; background: var(--bg); border-bottom: 1px solid var(--border); }
+.dropdown-search input { width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 6px; outline: none; background: var(--card); color: var(--text); }
+.dropdown-list { max-height: 200px; overflow-y: auto; }
+.dropdown-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+.dropdown-item:hover { background: #e7f1ff; color: var(--primary); font-weight: bold; }
+
+.btn-block { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 1rem; transition: all 0.2s ease; letter-spacing: 0.5px; } 
+.btn-block:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: var(--shadow); }
+
+#ujianScreen { display: none; flex-direction: column; height: 100%; } 
+.top-bar { background: var(--card); padding: 12px 25px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; z-index: 100; box-shadow: var(--shadow-sm); transition: 0.3s;} 
+.user-info { font-size: 0.95rem; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 15px; }
+.info-badge { background: #e7f1ff; color: var(--primary); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; }
+
+.top-controls { display: flex; gap: 8px; align-items: center; }
+.btn-icon { background: var(--secondary); color: white; border: none; width: 35px; height: 35px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: 0.2s; }
+.btn-icon:hover { background: #475569; transform: scale(1.05); }
+
+.main-area { display: flex; flex: 1; overflow: hidden; gap: 20px; padding: 20px; position: relative;} 
+.soal-panel { flex: 3; background: var(--card); border-radius: var(--radius); padding: 30px; overflow-y: auto; display: flex; flex-direction: column; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.3s;} 
+.nav-panel { flex: 1; background: var(--card); border-radius: var(--radius); padding: 25px; overflow-y: auto; max-width: 320px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.3s;}
+
+.nomor-soal { display: flex; justify-content: space-between; border-bottom: 2px solid var(--bg); padding-bottom: 15px; margin-bottom: 20px; font-weight: 700; color: var(--primary); }
+.teks-soal { line-height: 1.7; margin-bottom: 25px; color: var(--text); } 
+.teks-soal img { max-width: 100%; border-radius: 8px; border: 1px solid var(--border); box-shadow: var(--shadow-sm); margin-top: 10px;}
+
+/* --- Opsi Jawaban (PG & MCMA) --- */
+.opsi-group { display: flex; flex-direction: column; gap: 12px; } 
+.opsi-item { display: flex; align-items: flex-start; padding: 14px 18px; border: 2px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.2s ease; background: var(--card); } 
+.opsi-item:hover { background: var(--bg); border-color: #cbd5e1; } 
+.opsi-item:has(input:checked) { border-color: var(--primary); background: #e7f1ff; } 
+.opsi-item input { margin-right: 15px; margin-top: 4px; transform: scale(1.3); accent-color: var(--primary); cursor: pointer; }
+.opsi-content { flex: 1; overflow-x: auto; line-height: 1.5; }
+.opsi-content img { max-width: 100%; height: auto; border-radius: 8px; display: block; margin: 10px 0; }
+
+/* --- CSS Khusus Tabel Benar-Salah --- */
+.table-bs-container { overflow-x: auto; border-radius: 8px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); margin-bottom: 10px; }
+.table-bs { width: 100%; border-collapse: collapse; background: var(--card); }
+.table-bs th { background: var(--primary); color: white; padding: 12px; text-align: center; border: 1px solid var(--border); font-size: 0.95rem; }
+.table-bs th:first-child { text-align: left; }
+.table-bs td { padding: 12px; border: 1px solid var(--border); vertical-align: middle; color: var(--text); font-size: 1rem; }
+.table-bs td.text-center { text-align: center; }
+.radio-bs { transform: scale(1.4); cursor: pointer; accent-color: var(--primary); }
+.row-bs:hover { background-color: var(--bg); transition: 0.2s; }
+
+/* --- Nav Grid --- */
+.nav-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; } 
+.nav-btn { aspect-ratio: 1; border: 2px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--secondary); background: var(--card); transition: 0.2s; } 
+.nav-btn:hover { border-color: var(--secondary); color: var(--text); }
+.nav-btn.active { border-color: var(--primary); background: #e7f1ff; color: var(--primary); box-shadow: 0 0 0 2px rgba(14, 88, 166, 0.2); } 
+.nav-btn.filled { background: var(--success); color: white; border-color: var(--success); }
+
+.timer-display { background: #fffbeb; color: #b45309; padding: 15px; text-align: center; border-radius: 10px; font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; border: 1px solid #fde68a; box-shadow: var(--shadow-sm); letter-spacing: 1px; transition: 0.3s;}
+.tab-switch-warning { background: #fef2f2; color: var(--danger); padding: 8px; border-radius: 8px; margin-top: 10px; font-size: 0.85rem; text-align: center; font-weight: 600; border: 1px solid #fecaca; transition: 0.3s;}
+
+.footer-controls { margin-top: auto; display: flex; justify-content: space-between; padding-top: 30px; } 
+.btn-nav { padding: 12px 24px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: 700; font-size: 0.95rem; transition: 0.2s; box-shadow: var(--shadow-sm); } 
+.btn-prev { background: var(--secondary); } .btn-prev:hover { background: #475569; }
+.btn-next { background: var(--primary); } .btn-next:hover { background: var(--primary-dark); }
+.btn-submit { background: var(--success); display: none; } .btn-submit:hover { background: #059669; }
+
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; } 
+.modal-content { background: var(--card); width: 90%; max-width: 380px; padding: 25px; border-radius: 1.2rem; max-height: 85vh; overflow-y: auto; position: relative; box-shadow: var(--shadow-lg); transition: 0.3s;} 
+.close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: var(--secondary); transition: 0.2s; }
+
+/* --- Tombol Mengambang (FAB) Khusus Mobile --- */
+.fab-nav {
+    display: none;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    text-align: center;
+    line-height: 60px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 2000;
+    border: none;
+    transition: left 0.3s ease-out, top 0.3s ease-out; 
+    touch-action: none; 
+}
+
+@media(max-width: 768px) { 
+    .main-area { flex-direction: column; padding: 12px; gap: 15px; } 
+    .nav-panel { display: none; } 
+    .mobile-header-panel { display: flex; flex-direction: column; gap: 10px; background: var(--card); padding: 15px; border-radius: var(--radius); border: 1px solid var(--border); position: sticky; top: 0; z-index: 95; box-shadow: var(--shadow); transition: 0.3s;} 
+    .mobile-top-row { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1rem; } 
+    .m-timer { color: #b45309; background: #fffbeb; padding: 8px 12px; border-radius: 8px; border: 1px solid #fde68a; transition: 0.3s;} 
+    .m-violation { color: var(--danger); background: #fef2f2; padding: 8px 12px; border-radius: 8px; font-size: 0.9rem; border: 1px solid #fecaca; transition: 0.3s;} 
+    .soal-panel { width: 100%; margin-bottom: 10px; box-sizing: border-box; padding: 20px 15px; } 
+    .footer-controls { flex-direction: row; flex-wrap: wrap; gap: 10px; }
+    .btn-nav { flex: 1; min-width: 120px; text-align: center; }
+    .user-info { display: none; }
+    
+    .fab-nav { display: block; }
+    .mobile-nav-trigger-btn { display: none !important; } 
+}
+@media(min-width: 769px) { .mobile-header-panel { display: none; } }
     </style>
 </head>
-<body>
-    <header>
-        <div style="font-size: 1.2rem; font-weight: bold; text-align: center;">CBT TKA SMP</div>
-        <div class="header-controls">
-            <!-- Fitur Ukuran Font Sudah Dihapus -->
-            <div id="timer" class="timer">60:00</div>
-            <button id="btn-toggle-nav" class="btn-menu" onclick="toggleSidebar()">☰</button>
-        </div>
-    </header>
+<body class="font-medium"> 
 
-    <div id="login-screen" class="container" style="display: flex; max-width: 600px;">
-        <div class="card" style="width: 100%;">
-            <h2 style="margin-bottom: 1.5rem; color: var(--primary); text-align: center;">Data Peserta Ujian TKA SMP</h2>
+    <div id="loginScreen">
+        <div class="login-box">
+            <div class="login-header">
+                <h2>CBT TKA DUA DIMENSI</h2>
+                <p style="margin:5px 0 0; color:var(--secondary); font-size: 0.9rem;">Klinik Edukasi Dua Dimensi Yogyakarta</p>
+            </div>
+            
             <form id="biodata-form">
-                
                 <div class="form-group">
-                    <label>Nama Lengkap</label>
+                    <label>Nama Lengkap Peserta</label>
                     <div class="custom-select-box" id="select-box" onclick="toggleDropdown()">Pilih Nama Lengkap Anda</div>
                     <input type="hidden" id="nama"> 
                     
@@ -92,309 +200,488 @@
                     </div>
                 </div>
                 
-                <div class="form-group"><label>Asal Sekolah</label><input type="text" id="sekolah" class="input-readonly" readonly required></div>
-                <div class="form-group"><label>Kelas</label><input type="text" id="kelas" class="input-readonly" readonly required></div>
+                <div class="form-group"><label>Asal Sekolah</label><input type="text" id="sekolah" class="form-control form-control-readonly" readonly required></div>
+                <div class="form-group"><label>Kelas</label><input type="text" id="kelas" class="form-control form-control-readonly" readonly required></div>
                 
-                <!-- Nomor WhatsApp di-Hidden agar tetap bisa dikirim ke Spreadsheet tanpa terlihat -->
                 <input type="hidden" id="wa">
                 
-                <button type="submit" style="width: 100%; margin-top: 1rem;">Mulai Mengerjakan</button>
+                <button type="submit" class="btn-block" id="btnLogin">LANJUTKAN</button>
             </form>
         </div>
     </div>
-
-    <div id="loading">Memuat sistem... Mohon tunggu...</div>
-
-    <div id="quiz-screen" class="container">
-        <div class="main-content">
-            <div class="card">
-                <div style="color: var(--primary); font-weight:bold; margin-bottom:0.5rem; text-transform: uppercase; letter-spacing: 1px;" id="q-category"></div>
-                <h2 style="margin-bottom: 1rem;">Soal No. <span id="q-number">1</span></h2>
-                <div id="q-text" style="line-height: 1.6; margin-bottom: 1.5rem;"></div>
-                <div id="options-container"></div>
-            </div>
-            <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
-                <button id="btn-prev" class="btn-outline" onclick="changeQ(-1)">&#8592; Sebelumnya</button>
-                <button id="btn-next" onclick="changeQ(1)">Selanjutnya &#8594;</button>
-            </div>
-        </div>
-        
-        <aside class="sidebar card" id="sidebar">
-            <h3 style="text-align: center; margin-bottom: 1rem;">Navigasi Soal</h3>
-            <div class="grid" id="nav-grid"></div>
-            <button class="btn-danger" onclick="submitQuiz()">Akhiri Ujian</button>
-        </aside>
-    </div>
-
-    <div id="result-screen" class="container" style="max-width: 500px; text-align: center; display: none;">
-        <div class="card" style="width: 100%;">
-            <h2>Ujian Selesai!</h2>
-            <p style="color: #666; margin-top: 0.5rem;">Berikut adalah perolehan nilai Anda:</p>
-            
-            <div style="display: flex; justify-content: center; gap: 3rem; margin: 2rem 0; padding-bottom: 1.5rem; border-bottom: 1px dashed var(--border);">
-                <div>
-                    <p style="font-size: 0.9rem; color: #666; font-weight: bold;">TOTAL SKOR</p>
-                    <h1 style="font-size: 3rem; color: var(--primary);" id="res-total">0</h1>
-                </div>
-                <div>
-                    <p style="font-size: 0.9rem; color: #666; font-weight: bold;">RATA-RATA</p>
-                    <h1 style="font-size: 3rem; color: #ff9800;" id="res-rerata">0</h1>
-                </div>
+    
+    <!-- Rules / Tata Tertib Screen -->
+    <div id="rulesScreen" style="display: none;">
+        <div class="login-box" style="max-width: 500px;">
+            <div class="login-header" style="margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.4rem;">Tata Tertib Ujian</h2>
             </div>
             
-            <div style="margin-bottom: 2rem;">
-                <div class="score-row"><span>Bahasa Indonesia</span><strong id="res-bi">0</strong></div>
-                <div class="score-row"><span>Matematika</span><strong id="res-mtk">0</strong></div>
-                <div class="score-row"><span>Bahasa Inggris</span><strong id="res-bing">0</strong></div>
-                <div class="score-row"><span>IPA</span><strong id="res-ipa">0</strong></div>
+            <div class="rules-box" style="background: var(--bg); padding: 18px; border-radius: 10px; font-size: 0.95rem; line-height: 1.6; margin-bottom: 25px; border: 1px solid var(--border); color: var(--text);">
+                <ul style="padding-left: 20px; margin: 0;">
+                    <li style="margin-bottom: 10px;"><b>Durasi Ujian:</b> <span id="infoDurasi">60 Menit</span>. Waktu berjalan otomatis setelah tombol mulai ditekan.</li>
+                    <li style="margin-bottom: 10px;"><b>Wajib Layar Penuh:</b> Sistem akan masuk ke mode <i>fullscreen</i>.</li>
+                    <li style="margin-bottom: 10px;"><b>Dilarang Mencontek:</b> Keluar dari layar ujian atau membuka tab/aplikasi baru akan dicatat sebagai pelanggaran oleh sistem.</li>
+                    <li><b>Toleransi Pelanggaran:</b> Maksimal 3 kali. Lebih dari itu, ujian akan <b>dihentikan paksa</b>!</li>
+                </ul>
             </div>
-            <button onclick="location.reload()" style="width: 100%;">Kembali ke Awal</button>
+            
+            <div style="display: flex; gap: 10px;">
+                <button type="button" class="btn-block" style="background: var(--secondary); flex: 1;" onclick="location.reload()">Batal</button>
+                <button type="button" class="btn-block" id="btnMulaiExam" style="flex: 2;">SAYA PAHAM & MULAI</button>
+            </div>
         </div>
     </div>
 
-    <footer>&copy; 2026 Dua Dimensi Yogyakarta. All rights reserved.</footer>
-
-    <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyOZHsWzyZUm85NsjEzJHeks1fB7QtyhvzMXifHu3ucwpUq5Q49f_WuGY9TNKq9fxyQ/exec'; 
+    <div id="ujianScreen">
+        <div class="top-bar">
+            <div class="user-info">
+                <span>👤 <span id="infoNama">Peserta</span></span>
+                <span class="info-badge" id="infoSubtes">📚 Memuat Subtes...</span>
+            </div>
+            
+            <div class="top-controls">
+                <button class="btn-icon" onclick="changeFontSize()" title="Ubah Ukuran Font">Aa</button>
+                <button class="btn-icon" id="btnThemeToggle" onclick="toggleTheme()" title="Mode Gelap / Terang"><i class="fas fa-moon"></i></button>
+                <button onclick="confirmFinish()" style="background:var(--danger); color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:bold; cursor:pointer; margin-left:5px;">Selesai</button>
+            </div>
+        </div>
         
-        let questions = [];
-        let dataPesertaServer = []; 
-        let answers = {};
-        let biodata = {};
-        let currentIndex = 0;
-        let timeRem = 3600; 
-        let timerInt;
-        let isExamActive = false; 
+        <div class="main-area">
+            <div class="mobile-header-panel">
+                <div class="mobile-top-row">
+                    <div id="timerMobile" class="m-timer"><i class="fas fa-clock"></i> 60:00</div>
+                    <div id="violationMobile" class="m-violation"><i class="fas fa-exclamation-triangle"></i> 0/3</div>
+                </div>
+            </div>
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('loading').style.display = 'block';
+            <div class="soal-panel">
+                <div id="soalContainer"></div>
+                <div class="footer-controls">
+                    <button class="btn-nav btn-prev" onclick="changeQ(-1)" id="btnPrev">Sebelumnya</button>
+                    <button class="btn-nav btn-next" onclick="changeQ(1)" id="btnNext">Selanjutnya</button>
+                    <button class="btn-nav btn-submit" onclick="confirmFinish()" id="btnFinish">Kirim Jawaban</button>
+                </div>
+            </div>
+            
+            <div class="nav-panel">
+                <div class="timer-display" id="timerDesktop">60:00</div>
+                <div style="font-size:0.85rem; margin-bottom:10px; font-weight:bold;">Navigasi Soal</div>
+                <div class="nav-grid" id="navGridDesktop"></div>
+                <div style="margin-top:20px; font-size:0.8rem; color:var(--danger); text-align:center;">⚠️ Dilarang pindah tab / keluar fullscreen!</div>
+                <div class="tab-switch-warning" id="tabWarning">Pelanggaran: 0/3</div>
+            </div>
+        </div>
+    </div>
 
-            try {
-                const response = await fetch(SCRIPT_URL);
-                if (!response.ok) throw new Error('Gagal mengambil data');
-                
-                const dataServer = await response.json();
-                questions = dataServer.soal;
-                dataPesertaServer = dataServer.siswa;
-                
-                let rawNames = dataPesertaServer.map(p => p.nama);
-                let uniqueSortedNames = [...new Set(rawNames)].sort();
+    <!-- Modal Navigasi Mobile -->
+    <div class="modal-overlay" id="mobileNavModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleNavModal()">×</span>
+            <div style="text-align:center; font-weight:bold; margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:10px;">Daftar Soal</div>
+            <div class="nav-grid" id="navGridMobile"></div>
+            <div style="margin-top:15px; font-size:0.8rem; color:var(--danger); text-align:center;">Jaga kejujuran dalam mengerjakan ujian.</div>
+        </div>
+    </div>
 
-                const dropdownList = document.getElementById('dropdown-list');
-                uniqueSortedNames.forEach(nama => {
-                    let div = document.createElement('div');
-                    div.className = 'dropdown-item';
-                    div.innerText = nama;
-                    div.onclick = () => pilihNama(nama);
-                    dropdownList.appendChild(div);
-                });
+    <!-- Result Screen (Versi IRT) -->
+    <div id="resultScreen" style="display:none;">
+        <div class="login-box" style="text-align: center; max-width: 400px;">
+            <div style="font-size:4rem; color:var(--success); margin-bottom:10px;"><i class="fas fa-check-circle"></i></div>
+            <h2 style="color:var(--text); margin:0;">Ujian Selesai!</h2>
+            <p style="color: var(--secondary); margin-top: 1rem; margin-bottom: 2rem; line-height: 1.6;">
+                Data jawaban Anda telah berhasil direkam oleh sistem.<br><br>
+                <span style="font-size: 0.85rem; background: #e7f1ff; color: var(--primary); padding: 8px 12px; border-radius: 8px; font-weight: bold;">
+                    Penilaian menggunakan sistem IRT akan diproses.
+                </span>
+            </p>
+            <button onclick="location.reload()" class="btn-block">Selesai & Kembali ke Awal</button>
+        </div>
+    </div>
+    
+    <!-- Tombol Mengambang Navigasi Garis Tiga (Mobile) -->
+    <button class="fab-nav" onclick="toggleNavModal()" title="Buka Daftar Soal">
+        <i class="fas fa-bars"></i>
+    </button>
 
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('login-screen').style.display = 'flex';
-                
-            } catch (err) {
-                alert("Terjadi kesalahan koneksi. Pastikan URL GAS benar.");
-            }
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+// PASTIKAN URL DEPLOY CODE.GS SNBT ANDA YANG BARU DIMASUKKAN DI SINI
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyo2DCoSAqV2AM9U81a5TAtsVMLRBOb0bLf4FlT8HlLu6ayLEdROSUwyjwiCi4Hdz8PSA/exec'; 
+
+let questions = []; let dataPesertaServer = []; let answers = {}; let biodata = {};
+let currentIndex = 0; let timeRem = 3600; let timerInt; let isExamActive = false; let tabSwitchCount = 0;
+let isSubmitting = false; 
+
+// --- FITUR TEMA & FONT ---
+let currentFontState = 1; const fontClasses = ['font-small', 'font-medium', 'font-large'];
+
+function changeFontSize() {
+    document.body.classList.remove(...fontClasses);
+    currentFontState = (currentFontState + 1) % 3;
+    document.body.classList.add(fontClasses[currentFontState]);
+    localStorage.setItem('cbt_font_size', currentFontState);
+}
+
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    localStorage.setItem('cbt_theme', isDark ? 'dark' : 'light');
+    document.getElementById('btnThemeToggle').innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+}
+
+function loadPreferences() {
+    if (localStorage.getItem('cbt_theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('btnThemeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+    }
+    const savedFont = localStorage.getItem('cbt_font_size');
+    if (savedFont !== null) {
+        document.body.classList.remove(...fontClasses);
+        currentFontState = parseInt(savedFont);
+        document.body.classList.add(fontClasses[currentFontState]);
+    }
+}
+
+// --- FUNGSI PARSER GAMBAR ---
+function parseImgTags(html) {
+    if (!html) return '';
+    return String(html).replace(/<img\s+id=([a-zA-Z0-9_-]+)>/g, (match, id) => {
+        return `<img src="https://drive.google.com/thumbnail?id=${id}&sz=w800">`;
+    });
+}
+
+// --- INISIALISASI DATA ---
+window.onload = async () => {
+    loadPreferences();
+    Swal.fire({ title: 'Memuat Data...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+    
+    try {
+        const response = await fetch(SCRIPT_URL);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const dataServer = await response.json();
+        questions = dataServer.soal; dataPesertaServer = dataServer.siswa;
+        
+        let rawNames = dataPesertaServer.map(p => p.nama);
+        [...new Set(rawNames)].sort().forEach(nama => {
+            let div = document.createElement('div');
+            div.className = 'dropdown-item'; div.innerText = nama;
+            div.onclick = () => pilihNama(nama);
+            document.getElementById('dropdown-list').appendChild(div);
         });
+        
+        Swal.close();
+    } catch (err) {
+        Swal.fire('Error', 'Gagal memuat data dari server. Pastikan SCRIPT_URL sudah benar.', 'error');
+    }
+};
 
-        function toggleDropdown() {
-            const menu = document.getElementById('dropdown-menu');
-            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-            document.getElementById('search-nama').focus();
+// --- LOGIKA DROPDOWN ---
+function toggleDropdown() {
+    const menu = document.getElementById('dropdown-menu');
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    document.getElementById('search-nama').focus();
+}
+
+function filterNama() {
+    let filter = document.getElementById('search-nama').value.toUpperCase();
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.style.display = (item.innerText.toUpperCase().indexOf(filter) > -1) ? "" : "none";
+    });
+}
+
+function pilihNama(nama) {
+    document.getElementById('select-box').innerText = nama;
+    document.getElementById('nama').value = nama;
+    document.getElementById('dropdown-menu').style.display = 'none';
+    const data = dataPesertaServer.find(p => p.nama === nama);
+    if (data) {
+        document.getElementById('sekolah').value = data.sekolah;
+        document.getElementById('kelas').value = data.kelas;
+        document.getElementById('wa').value = data.wa; 
+    }
+}
+
+window.onclick = function(e) { if (!e.target.matches('.custom-select-box') && !e.target.closest('.dropdown-menu')) document.getElementById('dropdown-menu').style.display = 'none'; }
+function toggleNavModal() { const m = document.getElementById('mobileNavModal'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
+
+function requestFullScreen() {
+    let el = document.documentElement;
+    if (el.requestFullscreen) { el.requestFullscreen().catch(err=>console.log(err)); }
+    else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen().catch(err=>console.log(err)); }
+}
+
+// --- INTERSEPSI LOGIN KE TATA TERTIB ---
+document.getElementById('biodata-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!document.getElementById('nama').value) { Swal.fire('Perhatian', 'Pilih nama Anda dari daftar.', 'warning'); return; }
+    
+    biodata = {
+        nama: document.getElementById('nama').value,
+        asalSekolah: document.getElementById('sekolah').value,
+        kelas: document.getElementById('kelas').value,
+        nomorWA: document.getElementById('wa').value
+    };
+    
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('rulesScreen').style.display = 'flex';
+    document.getElementById('infoDurasi').innerText = (timeRem / 60) + " Menit";
+});
+
+// --- EKSEKUSI MULAI UJIAN ---
+document.getElementById('btnMulaiExam').addEventListener('click', () => {
+    document.getElementById('rulesScreen').style.display = 'none';
+    document.getElementById('infoNama').innerText = biodata.nama;
+    
+    if (localStorage.getItem('jawaban_cbt_snbt')) answers = JSON.parse(localStorage.getItem('jawaban_cbt_snbt'));
+    
+    document.getElementById('ujianScreen').style.display = 'flex';
+    isExamActive = true; 
+    isSubmitting = false; 
+    
+    requestFullScreen();
+    buildNavGrid(); showQuestion(0);
+    
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden && isExamActive && !isSubmitting) {
+            tabSwitchCount++;
+            document.getElementById('tabWarning').innerText = `Pelanggaran: ${tabSwitchCount}/3`;
+            document.getElementById('violationMobile').innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${tabSwitchCount}/3`;
+            if (tabSwitchCount >= 3) submitQuiz(true);
+            else Swal.fire('Peringatan!', `Dilarang keluar / pindah tab! Pelanggaran: ${tabSwitchCount}/3.`, 'warning').then(() => requestFullScreen());
+        }
+    });
+    
+    timerInt = setInterval(() => {
+        timeRem--;
+        let m = Math.floor(timeRem / 60).toString().padStart(2, '0');
+        let s = (timeRem % 60).toString().padStart(2, '0');
+        document.getElementById('timerDesktop').innerText = `${m}:${s}`;
+        document.getElementById('timerMobile').innerHTML = `<i class="fas fa-clock"></i> ${m}:${s}`;
+        if(timeRem <= 0) { 
+            clearInterval(timerInt); 
+            if (!isSubmitting) {
+                Swal.fire('Waktu Habis!', 'Jawaban dikirim otomatis.', 'warning').then(() => submitQuiz(true)); 
+            }
+        }
+    }, 1000);
+});
+
+// --- RENDER SOAL (MENDUKUNG PG, MCMA, BENAR-SALAH) ---
+function showQuestion(idx) {
+    currentIndex = idx; const q = questions[idx]; const div = document.getElementById('soalContainer');
+    
+    document.getElementById('infoSubtes').innerText = `📚 ${q.subtes || q.category || "CBT"}`;
+    const tipeSoal = q.tipe ? q.tipe.toUpperCase() : 'PG';
+
+    let h = `<div class="nomor-soal"><span>Soal No. ${q.id}</span></div><div class="teks-soal bacaan-panjang">${parseImgTags(q.text)}</div>`;
+
+    if (tipeSoal === 'MCMA') {
+        const curr = answers[q.id] || []; h += `<div class="opsi-group">`;
+        for(let [key, val] of Object.entries(q.options)) {
+            if(!val) continue; const chk = curr.includes(key) ? 'checked' : '';
+            h += `<label class="opsi-item"><input type="checkbox" ${chk} onchange="saveMcma('${q.id}','${key}')"> <div style="display:flex; width:100%;"><b style="margin-right:10px; margin-top:2px;">${key}.</b> <div class="opsi-content">${parseImgTags(val)}</div></div></label>`;
+        }
+        h += `</div>`;
+    } else if (tipeSoal === 'BS' || tipeSoal === 'BENAR SALAH') {
+        const curr = answers[q.id] || {}; 
+        h += `<div class="table-bs-container">
+                <table class="table-bs">
+                  <thead>
+                    <tr>
+                      <th>Pernyataan</th>
+                      <th style="width: 80px;">Benar</th>
+                      <th style="width: 80px;">Salah</th>
+                    </tr>
+                  </thead>
+                  <tbody>`;
+                  
+        for(let [key, val] of Object.entries(q.options)) {
+            if(!val) continue; 
+            const valAns = curr[key] || '';
+            const chkB = valAns === 'Benar' ? 'checked' : '';
+            const chkS = valAns === 'Salah' ? 'checked' : '';
+            
+            h += `<tr class="row-bs">
+                    <td>${parseImgTags(val)}</td>
+                    <td class="text-center">
+                        <input type="radio" name="bs_${q.id}_${key}" class="radio-bs" value="Benar" ${chkB} onchange="saveBs('${q.id}','${key}','Benar')">
+                    </td>
+                    <td class="text-center">
+                        <input type="radio" name="bs_${q.id}_${key}" class="radio-bs" value="Salah" ${chkS} onchange="saveBs('${q.id}','${key}','Salah')">
+                    </td>
+                  </tr>`;
+        }
+        h += `    </tbody>
+                </table>
+              </div>`;
+    } else {
+        h += `<div class="opsi-group">`;
+        for(let [key, val] of Object.entries(q.options)) {
+            if(!val) continue; const isSel = answers[q.id] === key;
+            h += `<label class="opsi-item"><input type="radio" name="opt" value="${key}" ${isSel ? 'checked' : ''} onchange="saveAnswer('${q.id}', '${key}')"> <div style="display:flex; width:100%;"><b style="margin-right:10px; margin-top:2px;">${key}.</b> <div class="opsi-content">${parseImgTags(val)}</div></div></label>`;
+        }
+        h += `</div>`;
+    }
+
+    div.innerHTML = h;
+    document.getElementById('btnPrev').disabled = (idx === 0);
+    document.getElementById('btnNext').style.display = (idx === questions.length - 1) ? 'none' : 'block';
+    document.getElementById('btnFinish').style.display = (idx === questions.length - 1) ? 'block' : 'none';
+    
+    document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('active');
+        if (b.innerText == q.id) b.classList.add('active');
+    });
+}
+
+// --- FUNGSI PENYIMPANAN JAWABAN ---
+function saveAnswer(id, key) { answers[id] = key; persist(); }
+function saveMcma(id, k) { let a = answers[id] || []; if(a.includes(k)) a=a.filter(x=>x!==k); else a.push(k); answers[id] = a; persist(); }
+function saveBs(id, k, v) { let o = answers[id] || {}; o[k] = v; answers[id] = o; persist(); showQuestion(currentIndex); }
+function persist() { localStorage.setItem('jawaban_cbt_snbt', JSON.stringify(answers)); buildNavGrid(); }
+function changeQ(s) { let n = currentIndex + s; if(n >= 0 && n < questions.length) showQuestion(n); }
+
+// --- NAVIGASI GRID ---
+function buildNavGrid() {
+    const gd = document.getElementById('navGridDesktop'), gm = document.getElementById('navGridMobile');
+    gd.innerHTML = ''; gm.innerHTML = '';
+    
+    questions.forEach((q, i) => {
+        let isAns = false;
+        if (answers[q.id]) {
+            if (Array.isArray(answers[q.id])) isAns = answers[q.id].length > 0;
+            else if (typeof answers[q.id] === 'object') isAns = Object.keys(answers[q.id]).length > 0;
+            else isAns = true;
         }
 
-        function filterNama() {
-            let filter = document.getElementById('search-nama').value.toUpperCase();
-            let items = document.querySelectorAll('.dropdown-item');
-            
-            items.forEach(item => {
-                let txtValue = item.textContent || item.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    item.style.display = "";
-                } else {
-                    item.style.display = "none";
-                }
+        const createBtn = () => {
+            const btn = document.createElement('div'); btn.className = 'nav-btn';
+            if (isAns) btn.classList.add('filled'); 
+            if (i === currentIndex) btn.classList.add('active');
+            btn.innerText = q.id; return btn;
+        };
+
+        const b1 = createBtn(); b1.onclick = () => showQuestion(i); gd.appendChild(b1);
+        const b2 = createBtn(); b2.onclick = () => { showQuestion(i); toggleNavModal(); }; gm.appendChild(b2);
+    });
+}
+
+// --- PENGIRIMAN DATA (ANTI KLIK GANDA) ---
+function confirmFinish(forced = false) {
+    if (isSubmitting) return; 
+    if (forced) { submitQuiz(true); return; }
+    
+    Swal.fire({ 
+        title: 'Kirim Jawaban', 
+        text: 'Pastikan semua soal terjawab. Akhiri ujian?', 
+        icon: 'question', 
+        showCancelButton: true, 
+        confirmButtonText: 'Ya, Kirim', 
+        cancelButtonText: 'Batal', 
+        confirmButtonColor: '#10b981' 
+    }).then((result) => { 
+        if (result.isConfirmed) submitQuiz(); 
+    });
+}
+
+async function submitQuiz(forced = false) {
+    if (isSubmitting) return; 
+    isSubmitting = true; 
+    
+    clearInterval(timerInt);
+    Swal.fire({ title: 'Mengirim...', text: 'Menyimpan jawaban (Mohon tunggu)', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+    const payload = { token: "CBT_DUA_DIMENSI_2026", biodata, answers };
+    
+    let retries = 3;
+    let success = false;
+    
+    while (retries > 0 && !success) {
+        try {
+            const response = await fetch(SCRIPT_URL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+                body: JSON.stringify(payload) 
             });
-        }
-
-        function pilihNama(namaPilihan) {
-            document.getElementById('select-box').innerText = namaPilihan;
-            document.getElementById('nama').value = namaPilihan;
-            document.getElementById('dropdown-menu').style.display = 'none';
             
-            const dataSiswa = dataPesertaServer.find(p => p.nama === namaPilihan);
-            if (dataSiswa) {
-                document.getElementById('sekolah').value = dataSiswa.sekolah;
-                document.getElementById('kelas').value = dataSiswa.kelas;
-                document.getElementById('wa').value = dataSiswa.wa; // Menugaskan nilai WA ke elemen hidden
+            const result = await response.json();
+            success = true; 
+            
+            if (result.status === 'success') {
+                localStorage.removeItem('jawaban_cbt_snbt'); 
+                isExamActive = false; 
+                Swal.close();
+                
+                document.getElementById('ujianScreen').style.display = 'none';
+                document.getElementById('resultScreen').style.display = 'flex';
+                
+                if (document.fullscreenElement) document.exitFullscreen().catch(e=>console.log(e));
+            } else { 
+                isSubmitting = false; 
+                Swal.fire('Gagal!', result.message, 'error'); 
             }
-        }
-
-        window.onclick = function(event) {
-            if (!event.target.matches('.custom-select-box') && !event.target.closest('.dropdown-menu')) {
-                document.getElementById('dropdown-menu').style.display = 'none';
-            }
-        }
-
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('hidden');
-        }
-
-        document.getElementById('biodata-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const inputNama = document.getElementById('nama').value;
-            if (!inputNama) {
-                alert("Silakan klik dan pilih nama Anda dari daftar terlebih dahulu.");
-                return;
-            }
-
-            biodata = {
-                nama: inputNama,
-                asalSekolah: document.getElementById('sekolah').value,
-                kelas: document.getElementById('kelas').value,
-                nomorWA: document.getElementById('wa').value // Membaca nilai dari elemen hidden
-            };
-            
-            document.getElementById('login-screen').style.display = 'none';
-            
-            const memoriTersimpan = localStorage.getItem('jawaban_cbt_tka');
-            if (memoriTersimpan) answers = JSON.parse(memoriTersimpan);
-            
-            document.getElementById('quiz-screen').style.display = 'flex';
-            document.getElementById('timer').style.display = 'block';
-            document.getElementById('btn-toggle-nav').style.display = 'block';
-            isExamActive = true; 
-            
-            buildGrid();
-            showQuestion(0);
-            
-            timerInt = setInterval(() => {
-                timeRem--;
-                let m = Math.floor(timeRem / 60).toString().padStart(2, '0');
-                let s = (timeRem % 60).toString().padStart(2, '0');
-                document.getElementById('timer').innerText = `${m}:${s}`;
-                if(timeRem <= 0) {
-                    alert("Waktu pengerjaan telah habis!");
-                    submitQuiz(true);
-                }
-            }, 1000);
-        });
-
-        function buildGrid() {
-            const grid = document.getElementById('nav-grid');
-            grid.innerHTML = '';
-            questions.forEach((q, i) => {
-                const btn = document.createElement('div');
-                btn.className = 'grid-btn';
-                if (answers[q.id]) btn.classList.add('answered'); 
-                btn.innerText = q.id;
-                btn.id = 'grid-' + i;
-                btn.onclick = () => showQuestion(i);
-                grid.appendChild(btn);
-            });
-        }
-
-        function showQuestion(index) {
-            currentIndex = index;
-            const q = questions[index];
-            document.getElementById('q-category').innerText = q.category;
-            document.getElementById('q-number').innerText = q.id;
-            document.getElementById('q-text').innerHTML = q.text; 
-            
-            const optCont = document.getElementById('options-container');
-            optCont.innerHTML = '';
-            
-            for(let [key, val] of Object.entries(q.options)) {
-                if(!val) continue; 
-                const isSel = answers[q.id] === key;
-                optCont.innerHTML += `
-                    <label class="option-label ${isSel ? 'selected' : ''}">
-                        <input type="radio" name="opt" value="${key}" ${isSel ? 'checked' : ''} onchange="saveAnswer(${q.id}, '${key}')">
-                        <span><strong>${key}.</strong> ${val}</span>
-                    </label>
-                `;
-            }
-            
-            document.getElementById('btn-prev').style.visibility = index === 0 ? 'hidden' : 'visible';
-            const btnNext = document.getElementById('btn-next');
-            if(index === questions.length - 1) {
-                btnNext.innerText = 'Selesai';
-                btnNext.onclick = () => submitQuiz();
+        } catch (err) { 
+            retries--;
+            if (retries === 0) {
+                isSubmitting = false; 
+                Swal.fire('Koneksi Terputus', 'Sistem gagal menjangkau server. Silakan klik Kirim Jawaban sekali lagi.', 'error'); 
             } else {
-                btnNext.innerText = 'Selanjutnya \u2192';
-                btnNext.onclick = () => changeQ(1);
+                await new Promise(res => setTimeout(res, 2000));
             }
-            
-            document.querySelectorAll('.grid-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('grid-'+index).classList.add('active');
         }
+    }
+}
 
-        function saveAnswer(id, key) {
-            answers[id] = key;
-            localStorage.setItem('jawaban_cbt_tka', JSON.stringify(answers)); 
-            document.getElementById('grid-'+currentIndex).classList.add('answered');
-            showQuestion(currentIndex); 
-        }
+window.addEventListener('beforeunload', function (e) { if (isExamActive) { e.preventDefault(); e.returnValue = ''; } });
 
-        function changeQ(step) {
-            let newIndex = currentIndex + step;
-            if(newIndex >= 0 && newIndex < questions.length) showQuestion(newIndex);
-        }
+// --- LOGIKA DRAG FAB BUTTON (SNAP TO EDGE) ---
+const fab = document.querySelector('.fab-nav');
+let isDragging = false;
+let currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
 
-        async function submitQuiz(force = false) {
-            if(!force && !confirm("Apakah Anda yakin ingin mengumpulkan jawaban sekarang?")) return;
-            
-            clearInterval(timerInt);
-            document.getElementById('quiz-screen').style.display = 'none';
-            document.getElementById('timer').style.display = 'none';
-            document.getElementById('btn-toggle-nav').style.display = 'none';
-            
-            document.getElementById('loading').innerText = 'Menyimpan jawaban (Mohon tunggu)...';
-            document.getElementById('loading').style.display = 'block';
+if (fab) {
+    fab.addEventListener('touchstart', dragStart, { passive: false });
+    fab.addEventListener('touchend', dragEnd);
+    fab.addEventListener('touchmove', drag, { passive: false });
+}
 
-            const payload = { token: "CBT_DUA_DIMENSI_2026", biodata, answers };
-            
-            setTimeout(async () => {
-                try {
-                    const response = await fetch(SCRIPT_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    const result = await response.json();
-                    
-                    document.getElementById('loading').style.display = 'none';
-                    if (result.status === 'success') {
-                        localStorage.removeItem('jawaban_cbt_tka');
-                        isExamActive = false; 
-                        
-                        document.getElementById('result-screen').style.display = 'flex';
-                        document.getElementById('res-total').innerText = result.total;
-                        document.getElementById('res-rerata').innerText = result.rerata;
-                        document.getElementById('res-bi').innerText = result.scoreBI;
-                        document.getElementById('res-mtk').innerText = result.scoreMTK;
-                        document.getElementById('res-bing').innerText = result.scoreBING;
-                        document.getElementById('res-ipa').innerText = result.scoreIPA;
-                    } else {
-                        alert("Pesan Sistem: " + result.message);
-                        document.getElementById('quiz-screen').style.display = 'flex';
-                        document.getElementById('btn-toggle-nav').style.display = 'block';
-                    }
-                } catch (err) {
-                    alert("Koneksi terputus. Silakan klik tombol 'Akhiri Ujian' sekali lagi.");
-                    document.getElementById('loading').style.display = 'none';
-                    document.getElementById('quiz-screen').style.display = 'flex';
-                    document.getElementById('btn-toggle-nav').style.display = 'block';
-                }
-            }, Math.floor(Math.random() * 3000));
-        }
+function dragStart(e) {
+    initialX = e.touches[0].clientX - xOffset;
+    initialY = e.touches[0].clientY - yOffset;
+    isDragging = true;
+    fab.style.transition = 'none'; 
+}
 
-        window.addEventListener('beforeunload', function (e) {
-            if (isExamActive) { e.preventDefault(); e.returnValue = ''; }
-        });
-    </script>
+function drag(e) {
+    if (isDragging) {
+        e.preventDefault(); 
+        currentX = e.touches[0].clientX - initialX;
+        currentY = e.touches[0].clientY - initialY;
+        xOffset = currentX;
+        yOffset = currentY;
+        fab.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+    }
+}
+
+function dragEnd(e) {
+    initialX = currentX;
+    initialY = currentY;
+    isDragging = false;
+    fab.style.transition = 'transform 0.3s ease-out'; 
+    
+    const rect = fab.getBoundingClientRect();
+    const screenWidth = window.innerWidth;
+    
+    if (rect.left + (rect.width / 2) < screenWidth / 2) {
+        currentX = currentX - rect.left + 15; 
+    } else {
+        currentX = currentX + (screenWidth - rect.right) - 15; 
+    }
+    
+    xOffset = currentX;
+    fab.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+}
+</script>
 </body>
 </html>
