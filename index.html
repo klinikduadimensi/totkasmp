@@ -450,7 +450,7 @@ document.getElementById('btnMulaiExam').addEventListener('click', () => {
     document.getElementById('rulesScreen').style.display = 'none';
     document.getElementById('infoNama').innerText = biodata.nama;
     
-    if (localStorage.getItem('jawaban_cbt_snbt')) answers = JSON.parse(localStorage.getItem('jawaban_cbt_snbt'));
+    if (localStorage.getItem('jawaban_cbt_tka')) answers = JSON.parse(localStorage.getItem('jawaban_cbt_tka'));
     
     document.getElementById('ujianScreen').style.display = 'flex';
     isExamActive = true; 
@@ -556,7 +556,7 @@ function showQuestion(idx) {
 function saveAnswer(id, key) { answers[id] = key; persist(); }
 function saveMcma(id, k) { let a = answers[id] || []; if(a.includes(k)) a=a.filter(x=>x!==k); else a.push(k); answers[id] = a; persist(); }
 function saveBs(id, k, v) { let o = answers[id] || {}; o[k] = v; answers[id] = o; persist(); showQuestion(currentIndex); }
-function persist() { localStorage.setItem('jawaban_cbt_snbt', JSON.stringify(answers)); buildNavGrid(); }
+function persist() { localStorage.setItem('jawaban_cbt_tka', JSON.stringify(answers)); buildNavGrid(); }
 function changeQ(s) { let n = currentIndex + s; if(n >= 0 && n < questions.length) showQuestion(n); }
 
 // --- NAVIGASI GRID ---
@@ -626,7 +626,7 @@ async function submitQuiz(forced = false) {
             success = true; 
             
             if (result.status === 'success') {
-                localStorage.removeItem('jawaban_cbt_snbt'); 
+                localStorage.removeItem('jawaban_cbt_tka'); 
                 isExamActive = false; 
                 Swal.close();
                 
