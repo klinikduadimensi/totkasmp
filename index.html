@@ -284,17 +284,34 @@ body { font-family: 'Inter', 'Segoe UI', Roboto, sans-serif; background: var(--b
         </div>
     </div>
 
-    <!-- Result Screen (Versi IRT) -->
+    <!-- Result Screen (Versi TKA SD/SMP) -->
     <div id="resultScreen" style="display:none;">
-        <div class="login-box" style="text-align: center; max-width: 400px;">
-            <div style="font-size:4rem; color:var(--success); margin-bottom:10px;"><i class="fas fa-check-circle"></i></div>
-            <h2 style="color:var(--text); margin:0;">Ujian Selesai!</h2>
-            <p style="color: var(--secondary); margin-top: 1rem; margin-bottom: 2rem; line-height: 1.6;">
-                Data jawaban Anda telah berhasil direkam oleh sistem.<br><br>
-                <span style="font-size: 0.85rem; background: #e7f1ff; color: var(--primary); padding: 8px 12px; border-radius: 8px; font-weight: bold;">
-                    Penilaian menggunakan sistem IRT akan diproses.
-                </span>
-            </p>
+        <div class="login-box" style="text-align: center; max-width: 450px;">
+            <div style="font-size:3.5rem; color:var(--success); margin-bottom:10px;"><i class="fas fa-medal"></i></div>
+            <h2 style="color:var(--text); margin:0; margin-bottom: 20px;">Ujian Selesai!</h2>
+            
+            <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 25px; text-align: left;">
+                <div style="text-align: center; margin-bottom: 15px; border-bottom: 2px solid var(--border); padding-bottom: 15px;">
+                    <div style="font-size: 0.9rem; color: var(--secondary); font-weight: bold; margin-bottom: 5px;">RATA-RATA AKHIR</div>
+                    <div id="res-rerata" style="font-size: 2.5rem; font-weight: 900; color: var(--primary);">0</div>
+                </div>
+                
+                <div style="font-size: 0.95rem; color: var(--text);">
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border);">
+                        <span style="font-weight: 600;">Bahasa Indonesia</span> <span id="res-bi" style="font-weight: bold;">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border);">
+                        <span style="font-weight: 600;">Matematika</span> <span id="res-mtk" style="font-weight: bold;">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed var(--border);">
+                        <span style="font-weight: 600;">IPA</span> <span id="res-ipa" style="font-weight: bold;">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                        <span style="font-weight: 600;">Bahasa Inggris</span> <span id="res-bing" style="font-weight: bold;">0</span>
+                    </div>
+                </div>
+            </div>
+            
             <button onclick="location.reload()" class="btn-block">Selesai & Kembali ke Awal</button>
         </div>
     </div>
@@ -612,6 +629,14 @@ async function submitQuiz(forced = false) {
                 localStorage.removeItem('jawaban_cbt_snbt'); 
                 isExamActive = false; 
                 Swal.close();
+                
+                // INJEKSI NILAI DARI SERVER KE LAYAR HASIL
+                // toFixed(1) digunakan agar nilai desimal rapi, contoh: 85.5
+                document.getElementById('res-rerata').innerText = parseFloat(result.rerata || 0).toFixed(1);
+                document.getElementById('res-bi').innerText = parseFloat(result.scoreBI || 0).toFixed(1);
+                document.getElementById('res-mtk').innerText = parseFloat(result.scoreMTK || 0).toFixed(1);
+                document.getElementById('res-ipa').innerText = parseFloat(result.scoreIPA || 0).toFixed(1);
+                document.getElementById('res-bing').innerText = parseFloat(result.scoreBING || 0).toFixed(1);
                 
                 document.getElementById('ujianScreen').style.display = 'none';
                 document.getElementById('resultScreen').style.display = 'flex';
